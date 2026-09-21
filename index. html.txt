@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تواصل مع صاحب السيارة</title>
+<style>
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: #f0f2f5;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+}
+.card {
+background: white;
+padding: 30px;
+border-radius: 16px;
+box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+width: 100%;
+max-width: 360px;
+text-align: center;
+}
+h2 { color: #1a1a1a; margin-bottom: 10px; font-size: 22px; }
+p { color: #666; font-size: 14px; margin-bottom: 25px; }
+.btn {
+display: block;
+width: 100%;
+padding: 14px;
+margin: 12px 0;
+border: none;
+border-radius: 10px;
+font-size: 16px;
+font-weight: bold;
+color: white;
+text-decoration: none;
+box-sizing: border-box;
+}
+.call { background: #007aff; }
+.whatsapp { background: #25d366; }
+.footer-note { font-size: 11px; color: #aaa; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2 id="carOwner">جاري التحميل...</h2>
+<p id="subText">نظام الحماية والخصوصية لمركبات الأمان</p>
+
+<a id="callBtn" href="#" class="btn call" style="display:none;">📞 مكالمة هاتفية آمنة</a>
+<a id="waBtn" href="#" class="btn whatsapp" style="display:none;">💬 مراسلة واتساب فورية</a>
+
+<div class="footer-note">رقمك الحقيقي محمي تماماً ولا يظهر للمتصل</div>
+</div>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const carId = urlParams.get('id');
+
+const API_URL = "https://script.google.com/macros/s/AKfycbxF8cJOQQNI3xfE7hefTgrM-noxExPuh6BFtPKGkHYN5_0kWRakz_VceJN152ADSA2j/exec
+";
+
+if (!carId) {
+document.getElementById('carOwner').innerText = "عذراً!";
+document.getElementById('subText').innerText = "كود السيارة غير موجود في الرابط.";
+} else {
+fetch(${API_URL}?id=${carId})
+.then(response => response.json())
+.then(data => {
+if (data.status === "success") {
+document.getElementById('carOwner').innerText = تواصل مع مالك السيارة;
+document.getElementById('subText').innerText = سيارة مسجلة باسم: ${data.name}`;
+
+let callBtn = document.getElementById('callBtn');
+callBtn.href = tel:+${data.phone}`;
+callBtn.style.display = "block";
+
+let waBtn = document.getElementById('waBtn');
+let msg = encodeURIComponent("مرحباً، لقد وجدت سيارتك تعيق الحركة أو بحاجة لتنبيه.");
+waBtn.href = https://wa.me/${data.phone}?text=${msg};
+waBtn.style.display = "block";
+} else {
+document.getElementById('carOwner').innerText = "عذراً";
+document.getElementById('subText').innerText = "هذه السيارة غير مسجلة أو تم إلغاء تفعيل الكود.";
+}
+})
+.catch(error => {
+document.getElementById('carOwner').innerText = "خطأ في الاتصال";
+document.getElementById('subText').innerText = "تعذر جلب بيانات السيارة، يرجى المحاولة لاحقاً.";
+});
+}
+</script>
+</body>
+</html>
